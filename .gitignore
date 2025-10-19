@@ -2,4 +2,5 @@ garminconnect-tokens/
 override-default-vars.env
 kubernetes-spec.yaml
 
+influxdb_backups/*
 .env
