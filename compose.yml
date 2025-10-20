@@ -18,8 +18,8 @@ services:
       - INFLUXDB_DATABASE=GarminStats
       - GARMINCONNECT_IS_CN=False # Set this to True if you are in mainland China or use Garmin-cn (Default False)
       #####################################################################################
-      # - GARMINCONNECT_EMAIL=your_garminconnect_email # optional, read the setup docs. (remove or comment out this line altogether if not used)
-      # - GARMINCONNECT_BASE64_PASSWORD=your_base64_encoded_garminconnect_password # optional, must be Base64 encoded, read setup docs. (remove or comment out this line altogether if not used)
+      - GARMINCONNECT_EMAIL=${GARMINCONNECT_EMAIL} # optional, read the setup docs. (remove or comment out this line altogether if not used)
+      - GARMINCONNECT_BASE64_PASSWORD=${GARMINCONNECT_BASE64_PASSWORD} # optional, must be Base64 encoded, read setup docs. (remove or comment out this line altogether if not used)
       #####################################################################################
       # The following ENV variables are required only if you are using influxdb V3 (You won't have to set the above )
       #####################################################################################
@@ -77,10 +77,14 @@ services:
       - GF_DATE_FORMATS_INTERVAL_DAY=MMM DD
       - GF_DATE_FORMATS_INTERVAL_MONTH=YYYY-MM
       - GF_DATE_FORMATS_INTERVAL_YEAR=YYYY
+      - GF_INSTALL_PLUGINS=grafana-llm-app
+      - GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=mainorg-sleepanalysis-panel
     volumes:
       - grafana_data:/var/lib/grafana
       - ./Grafana_Datasource:/etc/grafana/provisioning/datasources # (optional) Self provisioning influxdb datasource
       - ./Grafana_Dashboard:/etc/grafana/provisioning/dashboards # (optional) self provisioning grafana dashboard
+      - ./Grafana_Llm:/etc/grafana/provisioning/plugins/grafana-llm-app
+      - ./Grafana_Plugins/mainorg-sleepanalysis-panel/dist:/var/lib/grafana/plugins/mainorg-sleepanalysis-panel  # NEW
     ports:
       - '3000:3000'
     image: 'grafana/grafana:latest'

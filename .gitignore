@@ -1,3 +1,20 @@
 garminconnect-tokens/
 override-default-vars.env
 kubernetes-spec.yaml
+.env
+
+# Node modules
+node_modules/
+
+# Build artifacts
+dist/
+build/
+
+# Log files
+*.log
+npm-debug.log*
+
+# Editor-specific files
+.vscode/
+.idea/
+.DS_Store
