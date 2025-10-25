@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { PanelProps } from '@grafana/data';
 import { useAsync } from 'react-use';
-import { scan } from 'rxjs/operators';
 import { openai } from '@grafana/llm';
 import { Button, Spinner, Alert, useTheme2 } from '@grafana/ui';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -109,7 +108,7 @@ ${chartData.map(d =>
             4. Specific recommendations for improvement
             5. Any concerns or positive observations
             
-            Keep your response concise but informative (300-500 words).`
+            Keep your response concise but informative (20-30 words).`
           },
           { 
             role: 'user', 
@@ -117,7 +116,7 @@ ${chartData.map(d =>
           },
         ],
       })
-      .pipe(scan((acc, delta) => acc + delta, ''));
+      .pipe(openai.accumulateContent());
 
     return stream.subscribe(setAnalysis);
   }, [triggerAnalysis]);
