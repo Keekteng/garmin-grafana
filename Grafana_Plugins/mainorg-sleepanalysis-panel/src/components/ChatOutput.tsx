@@ -1,6 +1,6 @@
 import React from 'react';
 import { Spinner, Alert, useTheme2 } from '@grafana/ui';
-
+import { PanelProps } from '@grafana/data';
 
 interface ChatOutputProps {
     error: Error | undefined;
@@ -9,7 +9,7 @@ interface ChatOutputProps {
 
 }
 
-export const ChatOutput = ({error, loading, analysis}: ChatOutputProps) => {
+export const ChatOutput: React.FC<PanelProps> = ({error, loading, analysis}: ChatOutputProps) => {
     const theme = useTheme2();
     return (
         <div style={{ 

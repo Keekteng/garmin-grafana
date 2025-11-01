@@ -6,9 +6,7 @@ import { Button, Alert } from '@grafana/ui';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { ChatOutput } from './ChatOutput';
 
-interface Props extends PanelProps {}
-
-export const SleepAnalysisPanel: React.FC<Props> = ({ data, width, height, timeRange }) => {
+export const SleepAnalysisPanel: React.FC<PanelProps> = ({ data, width, height, timeRange }) => {
   const [showAnalysis, setShowAnalysis] = useState(false);
   const [analysis, setAnalysis] = useState('');
   const [triggerAnalysis, setTriggerAnalysis] = useState(0);
