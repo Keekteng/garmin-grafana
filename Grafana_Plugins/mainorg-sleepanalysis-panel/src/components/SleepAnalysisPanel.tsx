@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PanelProps } from '@grafana/data';
 import { useAsync } from 'react-use';
-import { openai } from '@grafana/llm';
+import { openai, llm } from '@grafana/llm';
 import { Button, Spinner, Alert, useTheme2 } from '@grafana/ui';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
@@ -85,11 +85,11 @@ ${chartData.map(d =>
       return;
     }
 
-    // const enabled = await openai.enabled();
-    // if (!enabled) {
-    //   setAnalysis('❌ LLM is not enabled. Please check your Grafana LLM configuration.');
-    //   return;
-    // }
+    const enabled = await llm.enabled();
+    if (!enabled) {
+      setAnalysis('❌ LLM is not enabled. Please check your Grafana LLM configuration.');
+      return;
+    }
 
     const sleepContext = generateSleepContext();
     
