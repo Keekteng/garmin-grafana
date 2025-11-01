@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { PanelProps } from '@grafana/data';
 import { useAsync } from 'react-use';
 import { openai, llm } from '@grafana/llm';
-import { Button, Spinner, Alert, useTheme2 } from '@grafana/ui';
+import { Button, Alert, useTheme2 } from '@grafana/ui';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { ChatOutput } from './ChatOutput';
 
 interface Props extends PanelProps {}
 
@@ -11,7 +12,6 @@ export const SleepAnalysisPanel: React.FC<Props> = ({ data, width, height, timeR
   const [showAnalysis, setShowAnalysis] = useState(false);
   const [analysis, setAnalysis] = useState('');
   const [triggerAnalysis, setTriggerAnalysis] = useState(0);
-  const theme = useTheme2();
 
   // Transform Grafana data into chart format
   const prepareChartData = () => {
@@ -177,34 +177,12 @@ ${chartData.map(d =>
 
       {/* Analysis Section */}
       {showAnalysis && (
-        <div style={{ 
-          flex: '0 0 40%', 
-          overflow: 'auto',
-          backgroundColor: theme.colors.background.secondary,
-          padding: '15px',
-          borderRadius: '4px',
-          border: `1px solid ${theme.colors.border.weak}`,
-          minHeight: '150px'
-        }}>
-          {error && <Alert title="Error" severity="error">{error.message}</Alert>}
-          {loading && (
-            <div style={{ textAlign: 'center', padding: '20px' }}>
-              <Spinner />
-              <p style={{ marginTop: '10px' }}>Analyzing your sleep patterns...</p>
-            </div>
-          )}
-          {!loading && analysis && (
-            <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6' }}>
-              <h4 style={{ marginTop: 0, marginBottom: '15px' }}>💤 Sleep Analysis</h4>
-              {analysis}
-            </div>
-          )}
-          {!loading && !analysis && !error && (
-            <p style={{ textAlign: 'center', color: theme.colors.text.secondary }}>
-              Click "Analyze Sleep Pattern" to get AI-powered insights
-            </p>
-          )}
-        </div>
+
+        <ChatOutput 
+          error={error} 
+          loading={loading} 
+          analysis={analysis} 
+        />
       )}
     </div>
   );
