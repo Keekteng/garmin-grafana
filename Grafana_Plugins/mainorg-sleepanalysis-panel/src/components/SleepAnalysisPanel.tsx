@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { PanelProps } from '@grafana/data';
 import { useAsync } from 'react-use';
 import { openai, llm } from '@grafana/llm';
-import { Button, Alert, useTheme2 } from '@grafana/ui';
+import { Button, Alert } from '@grafana/ui';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { ChatOutput } from './ChatOutput';
 
@@ -28,16 +28,18 @@ export const SleepAnalysisPanel: React.FC<Props> = ({ data, width, height, timeR
     const remSleep = data.series.find(s => s.name?.includes('REM') || s.refId === 'C');
     const awake = data.series.find(s => s.name?.includes('Awake') || s.refId === 'D');
 
-    if (!timeField) return [];
+    if (!timeField) {
+      return [];
+    }
 
     for (let i = 0; i < timeField.values.length; i++) {
-      const date = new Date(timeField.values.get(i));
+      const date = new Date(timeField.values[i]);
       chartData.push({
         date: date.toLocaleDateString(),
-        'Deep Sleep': deepSleep ? Math.round(deepSleep.fields[1].values.get(i) / 3600) : 0,
-        'Light Sleep': lightSleep ? Math.round(lightSleep.fields[1].values.get(i) / 3600) : 0,
-        'REM Sleep': remSleep ? Math.round(remSleep.fields[1].values.get(i) / 3600) : 0,
-        'Awake': awake ? Math.round(awake.fields[1].values.get(i) / 3600) : 0,
+        'Deep Sleep': deepSleep ? Math.round(deepSleep.fields[1].values[i] / 3600) : 0,
+        'Light Sleep': lightSleep ? Math.round(lightSleep.fields[1].values[i] / 3600) : 0,
+        'REM Sleep': remSleep ? Math.round(remSleep.fields[1].values[i] / 3600) : 0,
+        'Awake': awake ? Math.round(awake.fields[1].values[i] / 3600) : 0,
       });
     }
 

@@ -3,7 +3,7 @@ import { Spinner, Alert, useTheme2 } from '@grafana/ui';
 
 
 interface ChatOutputProps {
-    error: Error;
+    error: Error | undefined;
     loading: boolean;
     analysis: string;
 
@@ -36,7 +36,7 @@ export const ChatOutput = ({error, loading, analysis}: ChatOutputProps) => {
             )}
             {!loading && !analysis && !error && (
               <p style={{ textAlign: 'center', color: theme.colors.text.secondary }}>
-                Click "Analyze Sleep Pattern" to get AI-powered insights
+                {`Click "Analyze Sleep Pattern" to get AI-powered insights`}
               </p>
             )}
           </div>
