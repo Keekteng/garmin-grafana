@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAsync } from 'react-use';
-import { Spinner, useTheme2, Button, Alert  } from '@grafana/ui';
+import { Spinner, useTheme2, Button, Alert } from '@grafana/ui';
 import { LoadingState, PanelProps } from '@grafana/data';
 import { openai, llm } from '@grafana/llm';
 import { LLMPromptOptions } from 'types';
@@ -35,28 +35,22 @@ export const LLMPanel: React.FC<PanelProps<LLMPromptOptions>> = ({ data, width, 
         if (extractedData === undefined) {
             return;
         }
-        
-        let length = extractedData.length;
-        let chartData: any[] = [];
-        
-        for (let i = 0; i < length; i++) {
-            // Join the different fields in each row by ','
-            // Field 1: XXX, Field 2: XXX, Field 3: XXX
-            // Data must be rounded and process in the grafana query. No processing will be done here
-            let currData: string[] = [];
-            extractedData.fields.forEach(field => {
-                currData.push(`${field.name}: ${field.values[i]}`)
-            });
-            chartData.push(currData.join(', '));
-        }
-        
-        // Join the different rows by '\n'
-        let extractedDataString = chartData.join('\n')
+        // Data must be rounded and process in the grafana query. No processing will be done here
+        const extractedDataString = extractedData.fields[0].values
+            // Iterate through the rows 
+            .map((_, i) =>
+                extractedData.fields
+                    // Iterate through the fields in each row Eg: Field 1: XXX, Field 2: XXX, Field 3: XXX
+                    .map(field => `${field.name}: ${field.values[i]}`)
+                    .join(', ')
+            )
+            // Join the different rows
+            .join('\n');
         let toReplace: string = '{{' + alias + '}}';
         prompt = prompt.replace(toReplace, extractedDataString);
     }
 
-    
+
     const { loading, error } = useAsync(async () => {
         if (trigger === 0 || !isDataLoaded()) {
             return;
