@@ -33,10 +33,25 @@ export const LLMPanel: React.FC<PanelProps<LLMPromptOptions>> = ({ data, width, 
 
         let extractedData = data.series.find(s => s.refId === alias);
         if (extractedData === undefined) {
-            prompt = data.series.map(s => s.refId).join(',');
             return;
         }
-        let extractedDataString = extractedData.fields[1].values.join(',');
+        
+        let length = extractedData.length;
+        let chartData: any[] = [];
+        
+        for (let i = 0; i < length; i++) {
+            // Join the different fields in each row by ','
+            // Field 1: XXX, Field 2: XXX, Field 3: XXX
+            // Data must be rounded and process in the grafana query. No processing will be done here
+            let currData: string[] = [];
+            extractedData.fields.forEach(field => {
+                currData.push(`${field.name}: ${field.values[i]}`)
+            });
+            chartData.push(currData.join(', '));
+        }
+        
+        // Join the different rows by '\n'
+        let extractedDataString = chartData.join('\n')
         let toReplace: string = '{{' + alias + '}}';
         prompt = prompt.replace(toReplace, extractedDataString);
     }
