@@ -1,13 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "panel",
-  "name": "Llm_panel",
+  "name": "LLM-Panel",
   "id": "mainorg-llm-panel",
   "info": {
     "keywords": ["panel"],
     "description": "",
     "author": {
-      "name": "Mainorg"
+      "name": "Main org"
     },
     "logos": {
       "small": "img/logo.svg",

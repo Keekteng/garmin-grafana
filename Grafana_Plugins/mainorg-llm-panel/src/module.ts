@@ -1,40 +1,23 @@
 import { PanelPlugin } from '@grafana/data';
-import { SimpleOptions } from './types';
-import { SimplePanel } from './components/SimplePanel';
+import { LLMPromptOptions } from './types';
+import { LLMPanel } from './components/LLMPanel';
+import { TextEditor } from 'components/TextEditor';
 
-export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOptions((builder) => {
+
+
+export const plugin = new PanelPlugin<LLMPromptOptions>(LLMPanel).setPanelOptions((builder) => {
   return builder
-    .addTextInput({
-      path: 'text',
-      name: 'Simple text option',
-      description: 'Description of panel option',
-      defaultValue: 'Default value of text input option',
-    })
+  .addCustomEditor({
+    id: 'prompt',
+    path: 'prompt',
+    name: 'Prompt',
+    editor: TextEditor,
+    defaultValue: ''
+  })
     .addBooleanSwitch({
-      path: 'showSeriesCount',
-      name: 'Show series counter',
-      defaultValue: false,
-    })
-    .addRadio({
-      path: 'seriesCountSize',
-      defaultValue: 'sm',
-      name: 'Series counter size',
-      settings: {
-        options: [
-          {
-            value: 'sm',
-            label: 'Small',
-          },
-          {
-            value: 'md',
-            label: 'Medium',
-          },
-          {
-            value: 'lg',
-            label: 'Large',
-          },
-        ],
-      },
-      showIf: (config) => config.showSeriesCount,
+      path: 'showPrompt',
+      name: 'Display Prompt',
+      description: 'Display prompt after replacing with the extracted data',
+      defaultValue: false
     });
 });
