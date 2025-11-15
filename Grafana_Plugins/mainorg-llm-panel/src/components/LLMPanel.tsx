@@ -108,9 +108,15 @@ export const LLMPanel: React.FC<PanelProps<LLMPromptOptions>> = ({ data, width, 
     },[dataDictionary, displayPrompt])
 
     return (
-        <div>
+        <div style={{ 
+            display: 'flex', 
+            flexDirection: 'column',
+            height: '100%', // Fill all available height from parent
+            minHeight: 'max-content', // Ensures parent is at least as tall as its content
+            gap: '1rem',
+        }}>
             {/* Analysis Button */}
-            <div style={{ textAlign: 'center', margin: '10px 0' }}>
+            <div style={{ textAlign: 'center' }}>
                 <Button
                     onClick={onClickAnalysis}
                     disabled={loading || data.state !== LoadingState.Done}
@@ -123,54 +129,68 @@ export const LLMPanel: React.FC<PanelProps<LLMPromptOptions>> = ({ data, width, 
                     <Button
                         onClick={() => setShowAnalysis(false)}
                         variant="secondary"
-                        style={{ marginLeft: '10px' }}
                         size="md"
                     >
                         Clear Analysis
                     </Button>
                 )}
             </div>
-            {/* Prompt Text */}
-            {options.showPrompt &&
-                (
+            <div style={{ 
+                display: 'flex', 
+                flexDirection: 'column',
+                height: '100%', // Fill all available height from parent
+                gap: '1rem',
+            }}>
+                {/* Prompt Text */}
+                {options.showPrompt &&
+                    (
+                        <div style={{
+                            flex: 1,
+                            overflow: 'auto',
+                            overflowWrap: 'break-word', // Modern property for word wrapping
+                            whiteSpace: 'normal', // Ensures text wraps normally
+                            overflowX: 'hidden', // Prevents horizontal scrolling
+                            backgroundColor: theme.colors.background.secondary,
+                            padding: '1rem',
+                            borderRadius: '4px',
+                            border: `1px solid ${theme.colors.border.weak}`,
+                            minHeight: 0,
+                            width:'100%'
+                        }}>
+                            <p>{displayPrompt}</p>
+                        </div>
+                    )
+                }
+                {/* Prompt Output */}
+                {((trigger > 0 && showAnalysis) || true) &&
                     <div style={{
-                        flex: '1 0 10%',
-                        whiteSpace: 'pre-wrap',
-                        overflowWrap: 'break-word',
+                        flex: 1,
+                        overflow: 'auto',
+                        overflowWrap: 'break-word', // Modern property for word wrapping
+                        whiteSpace: 'normal', // Ensures text wraps normally
+                        overflowX: 'hidden', // Prevents horizontal scrolling
                         backgroundColor: theme.colors.background.secondary,
-                        padding: '15px',
+                        padding: '1rem',
                         borderRadius: '4px',
-                        border: `1px solid ${theme.colors.border.weak}`
+                        border: `1px solid ${theme.colors.border.weak}`,
+                        minHeight: 0,
+                        width:'100%'
                     }}>
-                        {displayPrompt}
-                    </div>
-                )
-            }
-            {/* Prompt Output */}
-            {(trigger > 0 && showAnalysis) &&
-                <div style={{
-                    flex: '1 0 10%',
-                    whiteSpace: 'pre-wrap',
-                    overflowWrap: 'break-word',
-                    backgroundColor: theme.colors.background.secondary,
-                    padding: '15px',
-                    borderRadius: '4px',
-                    border: `1px solid ${theme.colors.border.weak}`
-                }}>
-                    {error && <Alert title="Error" severity="error">{error.message}</Alert>}
-                    {loading && (
-                        <div style={{ textAlign: 'center', padding: '20px' }}>
-                            <Spinner />
-                            <p style={{ marginTop: '10px' }}>Analyzing your sleep patterns...</p>
-                        </div>
-                    )}
-                    {!loading && analysis && (
-                        <div>
-                            <h4 style={{ marginTop: 0, marginBottom: '15px' }}>Analysis</h4>
-                            {analysis}
-                        </div>
-                    )}
-                </div>}
+                        {error && <Alert title="Error" severity="error">{error.message}</Alert>}
+                        {loading && (
+                            <div>
+                                <Spinner />
+                                <p>Analyzing...</p>
+                            </div>
+                        )}
+                        {!loading && analysis && (
+                            <div>
+                                <h4>Analysis</h4>
+                                <p>{analysis}</p>
+                            </div>
+                        )}
+                    </div>}
+            </div>
         </div>
     )
 }
