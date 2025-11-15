@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAsync } from 'react-use';
 import { Spinner, useTheme2, Button, Alert } from '@grafana/ui';
 import { LoadingState, PanelProps } from '@grafana/data';
@@ -13,26 +13,33 @@ export const LLMPanel: React.FC<PanelProps<LLMPromptOptions>> = ({ data, width, 
     const [trigger, setTrigger] = useState(0);
     const [analysis, setAnalysis] = useState('');
 
-    let prompt: string = options.prompt;
+    const PROMPT: string = options.prompt
+    const [displayPrompt, setDisplayPrompt] = useState(PROMPT)
 
-    const isDataLoaded = () => { return data.state === LoadingState.Done; };
+    const [dataDictionary, setDataDictionary] = useState(data)
+
+
+    const isDataLoaded = () => { return dataDictionary.state === LoadingState.Done; };
 
     const extractDataAlias = () => {
         if (!isDataLoaded()) {
             return [];
         }
         const pattern = /\{\{(.*?)\}\}/g;
-        const matches = Array.from(prompt.matchAll(pattern));
+        const matches = Array.from(PROMPT.matchAll(pattern));
         return matches.map(match => match[1].trim());
     }
 
     const replaceDataAliasWithData = (alias: string) => {
         if (!isDataLoaded()) {
+            setDisplayPrompt(PROMPT);
             return;
         }
 
         let extractedData = data.series.find(s => s.refId === alias);
         if (extractedData === undefined) {
+            // setRefreshCounter(refreshCounter+1)
+            setDisplayPrompt(PROMPT);
             return;
         }
         // Data must be rounded and process in the grafana query. No processing will be done here
@@ -47,17 +54,20 @@ export const LLMPanel: React.FC<PanelProps<LLMPromptOptions>> = ({ data, width, 
             // Join the different rows
             .join('\n');
         let toReplace: string = '{{' + alias + '}}';
-        prompt = prompt.replace(toReplace, extractedDataString);
+
+        setDisplayPrompt(PROMPT.replace(toReplace, extractedDataString));
     }
 
+    const replacePromptWithData = () => {
+        let aliases = extractDataAlias();
+        aliases.forEach(a => replaceDataAliasWithData(a));
+    }
 
+    
     const { loading, error } = useAsync(async () => {
         if (trigger === 0 || !isDataLoaded()) {
             return;
         }
-        let aliases = extractDataAlias();
-        aliases.forEach(a => replaceDataAliasWithData(a));
-
 
         const enabled = await llm.enabled();
         if (!enabled) {
@@ -71,7 +81,7 @@ export const LLMPanel: React.FC<PanelProps<LLMPromptOptions>> = ({ data, width, 
                 messages: [
                     {
                         role: 'system',
-                        content: prompt
+                        content: displayPrompt
                     },
                     {
                         role: 'user',
@@ -88,6 +98,14 @@ export const LLMPanel: React.FC<PanelProps<LLMPromptOptions>> = ({ data, width, 
         setShowAnalysis(true)
         setTrigger(x => x + 1)
     }
+
+    useEffect(() => setDisplayPrompt(PROMPT), [PROMPT]);
+    useEffect(() => setDataDictionary(data), [data]);
+    useEffect(() => {
+        if (isDataLoaded()){
+            replacePromptWithData()
+        }
+    },[dataDictionary, displayPrompt])
 
     return (
         <div>
@@ -124,7 +142,7 @@ export const LLMPanel: React.FC<PanelProps<LLMPromptOptions>> = ({ data, width, 
                         borderRadius: '4px',
                         border: `1px solid ${theme.colors.border.weak}`
                     }}>
-                        {prompt}
+                        {displayPrompt}
                     </div>
                 )
             }
