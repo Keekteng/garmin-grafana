@@ -9393,32 +9393,8 @@
         "y": 179
       },
       "id": 13,
-      "options": {
-        "barRadius": 0,
-        "barWidth": 0.97,
-        "fullHighlight": false,
-        "groupWidth": 0.7,
-        "legend": {
-          "calcs": [
-            "mean"
-          ],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "orientation": "auto",
-        "showValue": "auto",
-        "stacking": "normal",
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        },
-        "xField": "Time",
-        "xTickLabelRotation": 0,
-        "xTickLabelSpacing": 100
-      },
-      "pluginVersion": "12.0.0",
+      "type": "mainorg-sleepanalysis-panel",
+      "title": "Sleep Stages with AI Analysis",
       "targets": [
         {
           "alias": "Deep Sleep",
@@ -9427,39 +9403,18 @@
             "uid": "garmin_influxdb"
           },
           "groupBy": [
-            {
-              "params": [
-                "12h"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
+            {"params": ["12h"], "type": "time"},
+            {"params": ["null"], "type": "fill"}
           ],
-          "hide": false,
           "measurement": "SleepSummary",
           "orderByTime": "ASC",
           "policy": "default",
-          "refId": "B",
+          "refId": "A",
           "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "deepSleepSeconds"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
+          "select": [[
+            {"params": ["deepSleepSeconds"], "type": "field"},
+            {"params": [], "type": "mean"}
+          ]],
           "tags": [],
           "tz": "$TimeZone"
         },
@@ -9470,39 +9425,18 @@
             "uid": "garmin_influxdb"
           },
           "groupBy": [
-            {
-              "params": [
-                "12h"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
+            {"params": ["12h"], "type": "time"},
+            {"params": ["null"], "type": "fill"}
           ],
-          "hide": false,
           "measurement": "SleepSummary",
           "orderByTime": "ASC",
           "policy": "default",
-          "refId": "A",
+          "refId": "B",
           "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "lightSleepSeconds"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
+          "select": [[
+            {"params": ["lightSleepSeconds"], "type": "field"},
+            {"params": [], "type": "mean"}
+          ]],
           "tags": [],
           "tz": "$TimeZone"
         },
@@ -9513,39 +9447,18 @@
             "uid": "garmin_influxdb"
           },
           "groupBy": [
-            {
-              "params": [
-                "12h"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
+            {"params": ["12h"], "type": "time"},
+            {"params": ["null"], "type": "fill"}
           ],
-          "hide": false,
           "measurement": "SleepSummary",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "C",
           "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "remSleepSeconds"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
+          "select": [[
+            {"params": ["remSleepSeconds"], "type": "field"},
+            {"params": [], "type": "mean"}
+          ]],
           "tags": [],
           "tz": "$TimeZone"
         },
@@ -9556,63 +9469,22 @@
             "uid": "garmin_influxdb"
           },
           "groupBy": [
-            {
-              "params": [
-                "12h"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
+            {"params": ["12h"], "type": "time"},
+            {"params": ["null"], "type": "fill"}
           ],
-          "hide": false,
           "measurement": "SleepSummary",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "D",
           "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "awakeSleepSeconds"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
+          "select": [[
+            {"params": ["awakeSleepSeconds"], "type": "field"},
+            {"params": [], "type": "mean"}
+          ]],
           "tags": [],
           "tz": "$TimeZone"
         }
-      ],
-      "title": "Sleep Stages",
-      "transformations": [
-        {
-          "id": "filterByValue",
-          "options": {
-            "filters": [],
-            "match": "any",
-            "type": "exclude"
-          }
-        },
-        {
-          "id": "filterByValue",
-          "options": {
-            "filters": [],
-            "match": "any",
-            "type": "include"
-          }
-        }
-      ],
-      "type": "barchart"
+      ]
     },
     {
       "datasource": {
